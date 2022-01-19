@@ -1,5 +1,5 @@
 import express from 'express';
-import { a } from '@src/module/a';
+import { a } from '@src/module/a';
 
 const app = express();
 const port = 3000;
