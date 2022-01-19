@@ -9,10 +9,8 @@
       "rootDir": "./src",
       "removeComments": true,
       "strict": true,
-      "typeRoots": [
-        "node_modules/@types"
-      ],
       "baseUrl": ".",
+      "types": ["node", "jest"],
     "paths": {
       "@src/*": ["./src/*"]
     }
@@ -20,5 +18,5 @@
     "include": [
       "src/**/*"
     ],
-    "lib": ["es2015"],
+    "lib": ["es2015"]
 }
