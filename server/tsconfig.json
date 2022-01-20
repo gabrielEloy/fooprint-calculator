@@ -11,6 +11,8 @@
       "strict": true,
       "baseUrl": ".",
       "types": ["node", "jest"],
+      "noImplicitAny": true,
+      "strictNullChecks": true,
     "paths": {
       "@src/*": ["./src/*"]
     }
