@@ -10,4 +10,7 @@ const travel = {
   emissionSourceIds: [7, 8, 9, 10, 11, 12],
 };
 
-export const categories: IRawEmissionCategory[] = [housing, travel];
+export const categories: IRawEmissionCategory[] = [
+  housing,
+  travel,
+];

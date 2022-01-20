@@ -1,17 +1,28 @@
 import { EmissionSourcesEntity, IEmissionCategory } from '@src/interfaces/categories';
 import { categories } from './categories';
+import { correctionFactors } from './correctionFactors';
+import { emissionFactors } from './emissionFactors';
 import { emissionSources } from './emissionSources';
 
-export const getEmissionFactor = (emissionSource: string) => {
-  if (emissionSource) return 0.41;
+export const getEmissionFactor = (emissionSourceId: number): number => {
+  const emissionFactor = emissionFactors.find(({ id }) => id === emissionSourceId);
 
-  return 0.41;
+  if (!emissionFactors) {
+    throw new Error(`Emission factor with id ${emissionSourceId} not found`);
+  }
+
+  return emissionFactor!.value;
 };
 
-export const getCorrectionFactor = (emissionSource: string) => {
-  if (emissionSource) return 1;
+export const getCorrectionFactor = (emissionSource: number) => {
+  const correctionFactor = correctionFactors
+    .find(({ emissionSourceId }) => emissionSourceId === emissionSource);
 
-  return 1;
+  if (!correctionFactor) {
+    return 1;
+  }
+
+  return correctionFactor.value;
 };
 
 const getEmissionSourceFromId = (id: number): EmissionSourcesEntity => {
@@ -33,7 +44,7 @@ export const getAllCategories = (): IEmissionCategory[] => {
   return transformedEmissionCategory;
 };
 
-export const calculateEmission = (emissionSource: string, value: number) => {
+export const calculateEmission = (emissionSource: number, value: number) => {
   const emissionFactor = getEmissionFactor(emissionSource);
 
   // some emission types need some sort of correction

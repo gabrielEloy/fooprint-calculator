@@ -21,7 +21,7 @@ export const emissionSources = [{
 {
   id: 5,
   title: 'Waste',
-  unit: 'Kg/year',
+  unit: 'Kg/week',
 },
 {
   id: 6,
