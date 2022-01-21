@@ -1,4 +1,4 @@
-import { IEmissionFactor } from '@src/interfaces/emissionFactors';
+import { IEmissionFactor } from '@src/interfaces/IEmissionFactor';
 
 export const emissionFactors: IEmissionFactor[] = [
   {

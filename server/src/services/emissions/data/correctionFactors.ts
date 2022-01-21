@@ -1,4 +1,4 @@
-import { ICorrectionFactors } from '@src/interfaces/correctionFactors';
+import { ICorrectionFactors } from '@src/interfaces/ICorrectionFactor';
 
 export const correctionFactors: ICorrectionFactors[] = [{
   // the original unit is in kg/day. We need to convert it to kg/year
@@ -23,3 +23,5 @@ export const correctionFactors: ICorrectionFactors[] = [{
   value: 1.09,
 },
 ];
+
+export const DEFAULT_CORRECTION_FACTOR = 1;

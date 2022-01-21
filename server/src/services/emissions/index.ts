@@ -1,8 +1,9 @@
-import { EmissionSourcesEntity, IEmissionCategory } from '@src/interfaces/categories';
-import { categories } from './categories';
-import { correctionFactors } from './correctionFactors';
-import { emissionFactors } from './emissionFactors';
-import { emissionSources } from './emissionSources';
+import { IEmissionCategory } from '@src/interfaces/IEmissionCategory';
+import { IEmissionSourcesEntity } from '@src/interfaces/IEmissionSource';
+import { categories } from './data/categories';
+import { correctionFactors, DEFAULT_CORRECTION_FACTOR } from './data/correctionFactors';
+import { emissionFactors } from './data/emissionFactors';
+import { emissionSources } from './data/emissionSources';
 
 export const getEmissionFactor = (emissionSourceId: number): number => {
   const emissionFactor = emissionFactors.find(({ id }) => id === emissionSourceId);
@@ -19,13 +20,13 @@ export const getCorrectionFactor = (emissionSource: number) => {
     .find(({ emissionSourceId }) => emissionSourceId === emissionSource);
 
   if (!correctionFactor) {
-    return 1;
+    return DEFAULT_CORRECTION_FACTOR;
   }
 
   return correctionFactor.value;
 };
 
-const getEmissionSourceFromId = (id: number): EmissionSourcesEntity => {
+const getEmissionSourceFromId = (id: number): IEmissionSourcesEntity => {
   const emissionSource = emissionSources.find((source) => source.id === id);
 
   if (!emissionSource) {

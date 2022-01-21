@@ -1,8 +1,4 @@
-export interface EmissionSourcesEntity {
-  id: number;
-  title: string;
-  unit: string;
-}
+import { IEmissionSourcesEntity } from './IEmissionSource';
 
 export interface IRawEmissionCategory {
   title: string;
@@ -11,5 +7,5 @@ export interface IRawEmissionCategory {
 
 export interface IEmissionCategory {
     title: string;
-    emissionSources: EmissionSourcesEntity[];
+    emissionSources: IEmissionSourcesEntity[];
 }

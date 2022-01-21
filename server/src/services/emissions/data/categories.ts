@@ -1,4 +1,4 @@
-import { IRawEmissionCategory } from '@src/interfaces/categories';
+import { IRawEmissionCategory } from '@src/interfaces/IEmissionCategory';
 
 const housing = {
   title: 'Housing',
