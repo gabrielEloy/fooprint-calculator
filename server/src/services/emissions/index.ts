@@ -1,4 +1,4 @@
-import { IEmissionCategory } from '@src/interfaces/IEmissionCategory';
+import { IEmissionCategory, IRawEmissionCategory } from '@src/interfaces/IEmissionCategory';
 import { IEmissionSourcesEntity } from '@src/interfaces/IEmissionSource';
 import { categories } from './data/categories';
 import { correctionFactors, DEFAULT_CORRECTION_FACTOR } from './data/correctionFactors';
@@ -36,8 +36,9 @@ const getEmissionSourceFromId = (id: number): IEmissionSourcesEntity => {
   return emissionSource;
 };
 
-export const getAllCategories = (): IEmissionCategory[] => {
-  const transformedEmissionCategory = categories.map((category) => ({
+export const getAllCategories = (availableCategories:IRawEmissionCategory[] = categories): IEmissionCategory[] => {
+  const transformedEmissionCategory = availableCategories.map((category) => ({
+    id: category.id,
     title: category.title,
     emissionSources: category.emissionSourceIds.map((id) => getEmissionSourceFromId(id)),
   }));

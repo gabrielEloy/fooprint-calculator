@@ -1,6 +1,7 @@
 import { IEmissionSourcesEntity } from './IEmissionSource';
 
 export interface IRawEmissionCategory {
+  id: number;
   title: string;
   emissionSourceIds: number[];
 }

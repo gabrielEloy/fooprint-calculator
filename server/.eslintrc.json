@@ -19,6 +19,7 @@
         "import/prefer-default-export": "off",
         "import/no-resolved": "off",
         "import/no-unresolved": "off",
-        "import/extensions": "off"
+        "import/extensions": "off",
+        "max-len": 0
    }
 }
