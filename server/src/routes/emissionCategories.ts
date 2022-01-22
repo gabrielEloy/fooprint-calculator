@@ -22,7 +22,7 @@ router.post('/calculate', (req, res) => {
 
   const emission = calculateEmission({ emissionValue: value, emissionFactor, correctionFactor });
 
-  res.json({ emission });
+  res.json({ emission, unit: 'kg CO2e/yr' });
 });
 
 export default router;

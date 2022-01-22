@@ -1,18 +1,26 @@
 import { getAllCategories } from '@src/services/emissions';
+import * as categories from '@src/services/emissions/data/categories';
+
+jest.mock('@src/services/emissions/data/categories');
+
+const mockCategoriesModule = categories as jest.Mocked<typeof categories>;
 
 describe('Emissions service test', () => {
   describe('When testing getAllCategories', () => {
-    const mockCategories = [{
-      id: 1,
-      title: 'Test',
-      emissionSourceIds: [],
-    },
-    {
-      id: 2,
-      title: 'Test_2',
-      emissionSourceIds: [],
-    }];
     it('Should correctly return all available categories ', () => {
+      const mockCategories = [{
+        id: 1,
+        title: 'Test',
+        emissionSourceIds: [],
+      },
+      {
+        id: 2,
+        title: 'Test_2',
+        emissionSourceIds: [],
+      }];
+
+      mockCategoriesModule.getCategories.mockImplementationOnce(() => mockCategories);
+
       const expectedResponse = [{
         id: 1,
         title: 'Test',
@@ -23,7 +31,7 @@ describe('Emissions service test', () => {
         emissionSources: [],
       }];
 
-      expect(getAllCategories(mockCategories)).toEqual(expectedResponse);
+      expect(getAllCategories()).toEqual(expectedResponse);
     });
   });
 });
