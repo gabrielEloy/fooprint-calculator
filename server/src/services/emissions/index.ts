@@ -7,7 +7,7 @@ import { getAllEmissionSources } from './data/emissionSources';
 
 export const getEmissionFactor = (emissionSourceId: number): number => {
   const emissionFactors = getAllEmissionFactors();
-  const emissionFactor = emissionFactors.find(({ id }) => id === emissionSourceId);
+  const emissionFactor = emissionFactors.find((factor) => factor.emissionSourceId === emissionSourceId);
 
   if (!emissionFactor) {
     throw new Error(`Emission factor with id ${emissionSourceId} not found`);
@@ -29,7 +29,7 @@ export const getCorrectionFactor = (emissionSource: number) => {
   return correctionFactor.value;
 };
 
-const getEmissionSourceFromId = (id: number): IEmissionSourcesEntity => {
+export const getEmissionSourceFromId = (id: number): IEmissionSourcesEntity => {
   const emissionSources = getAllEmissionSources();
   const emissionSource = emissionSources.find((source) => source.id === id);
 
@@ -50,12 +50,6 @@ export const getAllCategories = (availableCategories:IRawEmissionCategory[] = ca
   return transformedEmissionCategory;
 };
 
-export const calculateEmission = (emissionSource: number, value: number) => {
-  const emissionFactor = getEmissionFactor(emissionSource);
+interface ICalculatedEmissionArgs {emissionValue: number; emissionFactor: number; correctionFactor: number;}
 
-  // some emission types need some sort of correction
-  // wether it is to account for non-direct emissions or
-  // to transform the received unit to the expected one
-  const correctionFactor = getCorrectionFactor(emissionSource);
-  return emissionFactor * correctionFactor * value;
-};
+export const calculateEmission = ({ emissionValue, correctionFactor, emissionFactor }: ICalculatedEmissionArgs) => emissionFactor * correctionFactor * emissionValue;
