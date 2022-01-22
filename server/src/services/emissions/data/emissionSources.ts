@@ -1,4 +1,4 @@
-export const emissionSources = [{
+const emissionSources = [{
   id: 1,
   title: 'Electricity',
   unit: 'kWh/year',
@@ -57,3 +57,5 @@ export const emissionSources = [{
   title: 'Flying',
   unit: 'km/year',
 }];
+
+export const getAllEmissionSources = () => emissionSources;

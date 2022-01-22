@@ -1,14 +1,16 @@
-import { IEmissionCategory, IRawEmissionCategory } from '@src/interfaces/IEmissionCategory';
+import { ICalculatedEmissionArgs } from '@src/interfaces/ICalculatedEmissionArgs';
+import { IEmissionCategory } from '@src/interfaces/IEmissionCategory';
 import { IEmissionSourcesEntity } from '@src/interfaces/IEmissionSource';
-import { categories } from './data/categories';
-import { correctionFactors, DEFAULT_CORRECTION_FACTOR } from './data/correctionFactors';
-import { emissionFactors } from './data/emissionFactors';
-import { emissionSources } from './data/emissionSources';
+import { getCategories } from './data/categories';
+import { DEFAULT_CORRECTION_FACTOR, getAllCorrectionFactors } from './data/correctionFactors';
+import { getAllEmissionFactors } from './data/emissionFactors';
+import { getAllEmissionSources } from './data/emissionSources';
 
 export const getEmissionFactor = (emissionSourceId: number): number => {
-  const emissionFactor = emissionFactors.find(({ id }) => id === emissionSourceId);
+  const emissionFactors = getAllEmissionFactors();
+  const emissionFactor = emissionFactors.find((factor) => factor.emissionSourceId === emissionSourceId);
 
-  if (!emissionFactors) {
+  if (!emissionFactor) {
     throw new Error(`Emission factor with id ${emissionSourceId} not found`);
   }
 
@@ -16,6 +18,8 @@ export const getEmissionFactor = (emissionSourceId: number): number => {
 };
 
 export const getCorrectionFactor = (emissionSource: number) => {
+  const correctionFactors = getAllCorrectionFactors();
+
   const correctionFactor = correctionFactors
     .find(({ emissionSourceId }) => emissionSourceId === emissionSource);
 
@@ -26,7 +30,8 @@ export const getCorrectionFactor = (emissionSource: number) => {
   return correctionFactor.value;
 };
 
-const getEmissionSourceFromId = (id: number): IEmissionSourcesEntity => {
+export const getEmissionSourceFromId = (id: number): IEmissionSourcesEntity => {
+  const emissionSources = getAllEmissionSources();
   const emissionSource = emissionSources.find((source) => source.id === id);
 
   if (!emissionSource) {
@@ -36,8 +41,10 @@ const getEmissionSourceFromId = (id: number): IEmissionSourcesEntity => {
   return emissionSource;
 };
 
-export const getAllCategories = (availableCategories:IRawEmissionCategory[] = categories): IEmissionCategory[] => {
-  const transformedEmissionCategory = availableCategories.map((category) => ({
+export const getAllCategories = (): IEmissionCategory[] => {
+  const categories = getCategories();
+
+  const transformedEmissionCategory = categories.map((category) => ({
     id: category.id,
     title: category.title,
     emissionSources: category.emissionSourceIds.map((id) => getEmissionSourceFromId(id)),
@@ -46,12 +53,4 @@ export const getAllCategories = (availableCategories:IRawEmissionCategory[] = ca
   return transformedEmissionCategory;
 };
 
-export const calculateEmission = (emissionSource: number, value: number) => {
-  const emissionFactor = getEmissionFactor(emissionSource);
-
-  // some emission types need some sort of correction
-  // wether it is to account for non-direct emissions or
-  // to transform the received unit to the expected one
-  const correctionFactor = getCorrectionFactor(emissionSource);
-  return emissionFactor * correctionFactor * value;
-};
+export const calculateEmission = ({ emissionValue, correctionFactor, emissionFactor }: ICalculatedEmissionArgs) => emissionFactor * correctionFactor * emissionValue;

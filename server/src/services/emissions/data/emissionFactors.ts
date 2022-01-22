@@ -1,6 +1,6 @@
 import { IEmissionFactor } from '@src/interfaces/IEmissionFactor';
 
-export const emissionFactors: IEmissionFactor[] = [
+const emissionFactors: IEmissionFactor[] = [
   {
     id: 1,
     emissionSourceId: 1,
@@ -61,5 +61,6 @@ export const emissionFactors: IEmissionFactor[] = [
     emissionSourceId: 12,
     value: 1,
   },
-
 ];
+
+export const getAllEmissionFactors = () => emissionFactors;
