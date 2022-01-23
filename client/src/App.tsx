@@ -1,8 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CalculateEmissions } from "./routes/CalculateEmissions";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { CalculateEmissions } from './routes/CalculateEmissions';
 import { Home } from './routes/Home';
-
-type Props = {};
 
 export const routes = [{
   key: '/',
@@ -12,18 +10,17 @@ export const routes = [{
   key: '/calculate-emissions',
   label: 'Calculate emissions',
 },
-]
+];
 
-const App = (props: Props) => {
+function App() {
   return (
     <BrowserRouter>
-      <Routes >
+      <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/calculate-emissions" element={<CalculateEmissions />} />
       </Routes>
     </BrowserRouter>
-  )
-};
-
+  );
+}
 
 export default App;
