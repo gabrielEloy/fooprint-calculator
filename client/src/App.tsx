@@ -1,26 +1,24 @@
 import React, { useEffect, useState }from 'react';
 import { useEmissions } from './hooks/useEmissions';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 type Props = {};
 
+const Home = () => {
+  return (
+    <h1>welcome to the home</h1>
+  )
+}
+
+
 const App = (props: Props) => {
-  const [emissionsCategories, setEmissionCategories] = useState();
-  const { getEmissionCategories } = useEmissions();
-
-
-  useEffect(() => {
-    async function handleGetEmissionCategories(){
-      const emissions = await getEmissionCategories();
-      setEmissionCategories(emissions)
-
-    }
-
-    handleGetEmissionCategories()
-  }, [])
-
-  console.log({emissionsCategories})
-
-  return <div>hello</div>;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  )
 };
 
 
