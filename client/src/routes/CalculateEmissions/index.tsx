@@ -1,8 +1,8 @@
 import {
-  Card, Input, Select, Spin,
+  Card, InputNumber, Select, Spin,
 } from 'antd';
-import React, {
-  useState, ChangeEvent, useEffect, useCallback,
+import {
+  useState, useEffect, useCallback,
 } from 'react';
 import debounce from 'lodash.debounce';
 import { BaseLayout } from '../../components/BaseLayout';
@@ -26,7 +26,7 @@ export function CalculateEmissions() {
   const generateInitialFormValues = (emissionSources: IEmissionSource[]) => {
     const newFormValues: IAnyObject = {};
     emissionSources.forEach(({ id }) => {
-      newFormValues[String(id)] = '0';
+      newFormValues[String(id)] = 0;
     });
 
     return newFormValues;
@@ -59,13 +59,13 @@ export function CalculateEmissions() {
     setSelectedEmissionSource(id);
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (value: number, id: number) => {
     setFormValues({
       ...formValues,
-      [e.target.name]: e.target.value,
+      [String(id)]: value,
     });
 
-    debouncedCalculateEmission(Number(e.target.name), e.target.value);
+    debouncedCalculateEmission(id, value);
   };
 
   return (
@@ -89,7 +89,7 @@ export function CalculateEmissions() {
                         {title}
                         :
                       </h3>
-                      <Input className="antd-input" value={formValues[String(id)] || ''} onChange={handleInputChange} name={String(id)} />
+                      <InputNumber className="antd-input" value={formValues[String(id)]} min={0} onChange={(value) => handleInputChange(value, id)} name={String(id)} />
                       <div className="span-container">
                         <span>{unit}</span>
                       </div>

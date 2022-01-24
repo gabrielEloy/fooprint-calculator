@@ -28,7 +28,8 @@
         "react/react-in-jsx-scope": "off",
         "import/extensions": "off",
         "max-len": "off",
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "react/require-default-props": "off"
     },
     "settings": {
         "import/resolver": {
