@@ -1,7 +1,9 @@
+import { ICalculateEmissionQueryParams } from '@src/interfaces/ICalculateEmissionQueryParams';
+import { calculateEmissionsValidator } from '@src/middlewares/validators/emissions/calculateEmissions';
 import {
   calculateEmission, getAllCategories, getCorrectionFactor, getEmissionFactor,
 } from '@src/services/emissions';
-import express from 'express';
+import express, { Request } from 'express';
 
 const router = express.Router();
 
@@ -11,14 +13,14 @@ router.get('/categories', (req, res) => {
   return res.json(categories);
 });
 
-router.post('/calculate', (req, res) => {
+router.get('/calculate', calculateEmissionsValidator, (req: Request<{}, {}, {}, {}>, res) => {
   const {
-    emissionSource,
+    emissionSourceId,
     value,
-  } = req.body;
+  } = req.query as ICalculateEmissionQueryParams;
 
-  const emissionFactor = getEmissionFactor(emissionSource);
-  const correctionFactor = getCorrectionFactor(emissionSource);
+  const emissionFactor = getEmissionFactor(emissionSourceId);
+  const correctionFactor = getCorrectionFactor(emissionSourceId);
 
   const emission = calculateEmission({ emissionValue: value, emissionFactor, correctionFactor });
 
