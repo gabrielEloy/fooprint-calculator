@@ -8,14 +8,16 @@ export function useEmissions(): IUseEmissions {
   const emissionsBaseUrl = process.env.REACT_APP_EMISSIONS_BASE_URL;
 
   const getEmissionCategories = async () => {
-    const { data } = await axios.get(`${emissionsBaseUrl}/emissions/categories`);
+    const { data } = await axios.get(`${emissionsBaseUrl}/categories`);
     return data as IEmissions[];
   };
 
   const calculateEmission = async (id: number, value: number) => {
-    const { data } = await axios.post<ICalculateEmissionResponse>(`${emissionsBaseUrl}/emissions/calculate`, {
-      emissionSource: id,
-      value,
+    const { data } = await axios.get<ICalculateEmissionResponse>(`${emissionsBaseUrl}/calculate`, {
+      params: {
+        emissionSourceId: id,
+        value,
+      },
     });
 
     return data;
