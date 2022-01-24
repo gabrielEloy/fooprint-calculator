@@ -9,6 +9,7 @@ import { getAllEmissionSources } from './data/emissionSources';
 export const getEmissionFactor = (emissionSourceId: number): number => {
   const emissionFactors = getAllEmissionFactors();
   const emissionFactor = emissionFactors.find((factor) => factor.emissionSourceId === emissionSourceId);
+  console.log({ emissionFactors, emissionFactor, emissionSourceId });
 
   if (!emissionFactor) {
     throw new Error(`Emission factor with id ${emissionSourceId} not found`);
