@@ -45,4 +45,11 @@ export const InputContainer = styled.div`
     }
 `;
 
+export const LoaderContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+`;
+
 export default CalculateEmissionStyles;

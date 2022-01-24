@@ -4,11 +4,14 @@ import { IUseEmissions, IEmissionCategory, ICalculateEmissionResponse } from '..
 
 export function useEmissions(): IUseEmissions {
   const [emissions, setEmissions] = useState<IEmissionCategory[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const emissionsBaseUrl = process.env.REACT_APP_EMISSIONS_BASE_URL;
 
   const getEmissionCategories = async () => {
+    setIsLoading(true);
     const { data } = await axios.get<IEmissionCategory[]>(`${emissionsBaseUrl}/categories`);
+    setIsLoading(false);
     return data;
   };
 
@@ -30,5 +33,6 @@ export function useEmissions(): IUseEmissions {
   return {
     emissions,
     calculateEmission,
+    isLoading,
   };
 }

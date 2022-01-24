@@ -16,6 +16,7 @@ export interface ICalculateEmissionResponse {
 }
 
 export interface IUseEmissions{
-    emissions: IEmissionCategory[]
-    calculateEmission: (id: number, value: number) => Promise<ICalculateEmissionResponse>
+    emissions: IEmissionCategory[];
+    calculateEmission: (id: number, value: number) => Promise<ICalculateEmissionResponse>;
+    isLoading: boolean;
 }
