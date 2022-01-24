@@ -11,7 +11,7 @@ export const calculateEmissionsValidator = (req: Request, res: Response, next: N
 
   if (error) {
     return res.status(400).json({
-      error,
+      message: error.details[0].message,
     });
   }
 
