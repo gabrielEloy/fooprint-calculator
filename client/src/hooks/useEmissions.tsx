@@ -1,22 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-interface IEmissionSource {id: number, title: string; unit: string}
-interface IEmissions {
-  id: number;
-  title: string;
-  emissionSources: IEmissionSource[]
-}
-
-interface ICalculateEmissionResponse {
-  emission: number;
-  unit: string;
-}
-
-interface IUseEmissions{
-  emissions: IEmissions[]
-  calculateEmission: (id: number, value: number) => Promise<ICalculateEmissionResponse>
-}
+import { IUseEmissions, IEmissions, ICalculateEmissionResponse } from '../interfaces/useEmissions';
 
 export function useEmissions(): IUseEmissions {
   const [emissions, setEmissions] = useState<IEmissions[]>([]);

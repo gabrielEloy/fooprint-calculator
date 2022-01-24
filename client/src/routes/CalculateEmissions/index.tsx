@@ -4,11 +4,10 @@ import {
 import { useState, ChangeEvent, useEffect } from 'react';
 import { BaseLayout } from '../../components/BaseLayout';
 import { useEmissions } from '../../hooks/useEmissions';
+import { IAnyObject } from '../../interfaces/objects';
 import CalculateEmissionStyles, { InputContainer } from './styles';
 
 const { Option } = Select;
-
-interface IAnyObject { [key: string]: any }
 
 export function CalculateEmissions() {
   const [selectedEmissionSource, setSelectedEmissionSource] = useState<number>();

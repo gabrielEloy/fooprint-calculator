@@ -5,9 +5,7 @@ import { Header } from '../Header';
 
 const { Content, Footer } = Layout;
 
-interface IBaseLayout {}
-
-export function BaseLayout({ children }: PropsWithChildren<IBaseLayout>) {
+export function BaseLayout({ children }: PropsWithChildren<{}>) {
   return (
     <Layout className="layout">
       <Header headerItems={routes} />
