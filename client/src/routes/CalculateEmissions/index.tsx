@@ -1,7 +1,10 @@
 import {
   Card, Input, Select,
 } from 'antd';
-import { useState, ChangeEvent, useEffect } from 'react';
+import {
+  useState, ChangeEvent, useEffect, useCallback,
+} from 'react';
+import debounce from 'lodash.debounce';
 import { BaseLayout } from '../../components/BaseLayout';
 import { useEmissions } from '../../hooks/useEmissions';
 import { IAnyObject } from '../../interfaces/objects';
@@ -36,12 +39,17 @@ export function CalculateEmissions() {
     }
   }, [currentCategory]);
 
-  const handleCalculateEmission = async (id: number) => {
-    const value = formValues[String(id)];
+  const handleCalculateEmission = async (id: number, value: string) => {
+    const parsedValue = Number(value);
 
-    const { emission } = await calculateEmission(id, value);
+    const { emission } = await calculateEmission(id, parsedValue);
     setEmissionResults({ ...emissionResults, [String(id)]: emission });
   };
+
+  const debouncedCalculateEmission = useCallback(
+    debounce((id, value) => handleCalculateEmission(id, value), 300),
+    [emissionResults],
+  );
 
   const handleSelectChange = (id: number) => {
     setSelectedEmissionSource(id);
@@ -52,6 +60,8 @@ export function CalculateEmissions() {
       ...formValues,
       [e.target.name]: e.target.value,
     });
+
+    debouncedCalculateEmission(Number(e.target.name), e.target.value);
   };
 
   return (
@@ -72,7 +82,7 @@ export function CalculateEmissions() {
                     {title}
                     :
                   </h3>
-                  <Input className="antd-input" value={formValues[String(id)] || ''} onBlur={() => handleCalculateEmission(id)} onChange={handleInputChange} name={String(id)} />
+                  <Input className="antd-input" value={formValues[String(id)] || ''} onChange={handleInputChange} name={String(id)} />
                   <div className="span-container">
                     <span>{unit}</span>
                   </div>
