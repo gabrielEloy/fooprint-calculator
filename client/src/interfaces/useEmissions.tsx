@@ -4,18 +4,18 @@ export interface IEmissionSource {
     unit: string;
 }
 
-export interface IEmissions {
+export interface IEmissionCategory {
     id: number;
     title: string;
-    emissionSources: IEmissionSource[]
-  }
+    emissionSources: IEmissionSource[];
+}
 
 export interface ICalculateEmissionResponse {
     emission: number;
     unit: string;
-  }
+}
 
 export interface IUseEmissions{
-    emissions: IEmissions[]
+    emissions: IEmissionCategory[]
     calculateEmission: (id: number, value: number) => Promise<ICalculateEmissionResponse>
-  }
+}

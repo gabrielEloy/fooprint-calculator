@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { IUseEmissions, IEmissions, ICalculateEmissionResponse } from '../interfaces/useEmissions';
+import { IUseEmissions, IEmissionCategory, ICalculateEmissionResponse } from '../interfaces/useEmissions';
 
 export function useEmissions(): IUseEmissions {
-  const [emissions, setEmissions] = useState<IEmissions[]>([]);
+  const [emissions, setEmissions] = useState<IEmissionCategory[]>([]);
 
   const emissionsBaseUrl = process.env.REACT_APP_EMISSIONS_BASE_URL;
 
   const getEmissionCategories = async () => {
-    const { data } = await axios.get(`${emissionsBaseUrl}/categories`);
-    return data as IEmissions[];
+    const { data } = await axios.get<IEmissionCategory[]>(`${emissionsBaseUrl}/categories`);
+    return data;
   };
 
   const calculateEmission = async (id: number, value: number) => {

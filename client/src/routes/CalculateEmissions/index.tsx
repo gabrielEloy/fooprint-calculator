@@ -5,6 +5,8 @@ import { useState, ChangeEvent, useEffect } from 'react';
 import { BaseLayout } from '../../components/BaseLayout';
 import { useEmissions } from '../../hooks/useEmissions';
 import { IAnyObject } from '../../interfaces/objects';
+import { IEmissionSource } from '../../interfaces/useEmissions';
+import { sumObjectValues } from '../../services/objects';
 import CalculateEmissionStyles, { InputContainer } from './styles';
 
 const { Option } = Select;
@@ -14,19 +16,25 @@ export function CalculateEmissions() {
   const [emissionResults, setEmissionResults] = useState<IAnyObject>({});
   const [formValues, setFormValues] = useState<IAnyObject>({});
   const { emissions, calculateEmission } = useEmissions();
-  const currentEmissionSource = selectedEmissionSource && emissions.find((e) => e.id === selectedEmissionSource);
 
-  const totalEmissions = Object.values(emissionResults).reduce((acc, curr) => acc + curr, 0).toFixed(2);
+  const currentCategory = selectedEmissionSource && emissions.find((e) => e.id === selectedEmissionSource);
+  const totalEmissions = sumObjectValues(emissionResults).toFixed(2);
+
+  const generateInitialFormValues = (emissionSources: IEmissionSource[]) => {
+    const newFormValues: IAnyObject = {};
+    emissionSources.forEach(({ id }) => {
+      newFormValues[String(id)] = '0';
+    });
+
+    return newFormValues;
+  };
 
   useEffect(() => {
-    if (currentEmissionSource) {
-      const newFormValues: IAnyObject = {};
-      currentEmissionSource.emissionSources.forEach(({ id }) => {
-        newFormValues[String(id)] = '0';
-      });
+    if (currentCategory) {
+      const newFormValues: IAnyObject = generateInitialFormValues(currentCategory.emissionSources);
       setFormValues(newFormValues);
     }
-  }, [currentEmissionSource]);
+  }, [currentCategory]);
 
   const handleCalculateEmission = async (id: number) => {
     const value = formValues[String(id)];
@@ -54,11 +62,11 @@ export function CalculateEmissions() {
             <div className="calculations-container">
               <InputContainer>
                 <h3>Emission category:</h3>
-                <Select className="antd-select" value={selectedEmissionSource} onChange={handleSelectChange}>
+                <Select placeholder="Select an emission category" className="antd-select" value={selectedEmissionSource} onChange={handleSelectChange}>
                   {emissions.map(({ id, title }) => (<Option key={`${id}-${title}`} value={id}>{title}</Option>))}
                 </Select>
               </InputContainer>
-              {currentEmissionSource && currentEmissionSource.emissionSources.map(({ id, title, unit }) => (
+              {currentCategory && currentCategory.emissionSources.map(({ id, title, unit }) => (
                 <InputContainer key={`${id}-${title}`}>
                   <h3>
                     {title}
