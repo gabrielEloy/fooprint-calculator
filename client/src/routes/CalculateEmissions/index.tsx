@@ -1,5 +1,5 @@
 import {
-  Card, InputNumber, Select, Spin,
+  Card, Spin,
 } from 'antd';
 import {
   useState, useEffect, useCallback,
@@ -10,17 +10,16 @@ import { useEmissions } from '../../hooks/useEmissions';
 import { IAnyObject } from '../../interfaces/objects';
 import { IEmissionSource } from '../../interfaces/useEmissions';
 import { sumObjectValues } from '../../services/objects';
-import CalculateEmissionStyles, { InputContainer, LoaderContainer } from './styles';
-
-const { Option } = Select;
+import CalculateEmissionStyles, { LoaderContainer } from './CalculateEmissionStyles';
+import { CalculationsContainer } from './components/CalculationsContainer';
 
 export function CalculateEmissions() {
-  const [selectedEmissionSource, setSelectedEmissionSource] = useState<number>();
+  const [selectedEmissionCategory, setselectedEmissionCategory] = useState<number>();
   const [emissionResults, setEmissionResults] = useState<IAnyObject>({});
   const [formValues, setFormValues] = useState<IAnyObject>({});
   const { isLoading, emissions, calculateEmission } = useEmissions();
 
-  const currentCategory = selectedEmissionSource && emissions.find((e) => e.id === selectedEmissionSource);
+  const currentCategory = emissions.find((e) => e.id === selectedEmissionCategory);
   const totalEmissions = sumObjectValues(emissionResults).toFixed(2);
 
   const generateInitialFormValues = (emissionSources: IEmissionSource[]) => {
@@ -39,6 +38,12 @@ export function CalculateEmissions() {
     }
   }, [currentCategory]);
 
+  const resetEmissionResults = () => setEmissionResults({});
+
+  useEffect(() => {
+    resetEmissionResults();
+  }, [selectedEmissionCategory]);
+
   const handleCalculateEmission = async (id: number, value: string) => {
     const parsedValue = Number(value);
 
@@ -55,8 +60,8 @@ export function CalculateEmissions() {
     [emissionResults],
   );
 
-  const handleSelectChange = (id: number) => {
-    setSelectedEmissionSource(id);
+  const handleSelectEmissionCategory = (id: number) => {
+    setselectedEmissionCategory(id);
   };
 
   const handleInputChange = (value: number, id: number) => {
@@ -77,24 +82,14 @@ export function CalculateEmissions() {
               <>
                 {' '}
                 <div className="calculations-container">
-                  <InputContainer>
-                    <h3>Emission category:</h3>
-                    <Select placeholder="Select an emission category" className="antd-select" value={selectedEmissionSource} onChange={handleSelectChange}>
-                      {emissions.map(({ id, title }) => (<Option key={`${id}-${title}`} value={id}>{title}</Option>))}
-                    </Select>
-                  </InputContainer>
-                  {currentCategory && currentCategory.emissionSources.map(({ id, title, unit }) => (
-                    <InputContainer key={`${id}-${title}`}>
-                      <h3>
-                        {title}
-                        :
-                      </h3>
-                      <InputNumber className="antd-input" value={formValues[String(id)]} min={0} onChange={(value) => handleInputChange(value, id)} name={String(id)} />
-                      <div className="span-container">
-                        <span>{unit}</span>
-                      </div>
-                    </InputContainer>
-                  ))}
+                  <CalculationsContainer
+                    formValues={formValues}
+                    handleInputChange={handleInputChange}
+                    currentCategory={currentCategory}
+                    emissions={emissions}
+                    selectedEmissionCategory={selectedEmissionCategory}
+                    handleSelectEmissionCategory={handleSelectEmissionCategory}
+                  />
                 </div>
                 <div className="results-container">
                   <h2>Total emissions:</h2>
