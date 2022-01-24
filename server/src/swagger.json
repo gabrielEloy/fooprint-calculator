@@ -1,0 +1,140 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Carbon Footprint Calculator",
+    "description": "A carbon footprint calculator helps people be more aware of their contribution to the current environmental problem and what they can do to lessen their impact on the environment.",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/categories": {
+      "get": {
+        "description": "Returns all available emission categories with its respective emission sources",
+        "operationId": "getEmissionCategories",
+        "responses": {
+          "200": {
+            "description": "Successfull operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EmissionCategory"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calculate": {
+      "get": {
+        "description": "Returns the calculated emissions for a given emission source and value combination. Each operation has an expected unit, specified in the emissionSource object",
+        "operationId": "calculateEmissions",
+        "parameters": [
+          {
+            "name": "emissionSourceId",
+            "description": "Used emission source ID, taken from the \"emissionSource\" object",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "value",
+            "description": "Used emission source ID, taken from the \"emissionSource\" object",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unit calculation result",
+            "schema": {
+              "$ref": "#/definitions/EmissionCalculation"
+            }
+          },
+          "400": {
+            "description": "Validation error. One of the sent parameters was invalid or missing",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EmissionSource": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "unit"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        }
+      }
+    },
+    "EmissionCategory": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "emissionSources"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "emissionSources": {
+          "$ref": "#/definitions/EmissionSource"
+        }
+      }
+    },
+    "EmissionCalculation": {
+      "type": "object",
+      "required": [
+        "unit",
+        "emission"
+      ],
+      "properties": {
+        "unit": {
+          "type": "string"
+        },
+        "emission": {
+          "type": "number"
+        }
+      }
+    },
+    "ErrorModel": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
