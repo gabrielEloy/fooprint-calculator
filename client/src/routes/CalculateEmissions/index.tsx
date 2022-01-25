@@ -78,7 +78,14 @@ export function CalculateEmissions() {
       <BaseLayout>
         <Card className="calculate-emission-container" title="Calculate emissions">
           <div className="card-content">
-            {isLoading ? (<LoaderContainer><Spin /></LoaderContainer>) : (
+            {isLoading ? (
+              <LoaderContainer>
+                <div>
+                  <span>loading</span>
+                  <Spin />
+                </div>
+              </LoaderContainer>
+            ) : (
               <>
                 {' '}
                 <div className="calculations-container">
@@ -92,8 +99,11 @@ export function CalculateEmissions() {
                   />
                 </div>
                 <div className="results-container">
-                  <h2>Total emissions:</h2>
-                  <span>{totalEmissions}</span>
+                  <h2>
+                    Total emissions:
+                    {' '}
+                    {totalEmissions}
+                  </h2>
                 </div>
               </>
             )}

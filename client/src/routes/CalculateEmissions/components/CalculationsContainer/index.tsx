@@ -23,7 +23,12 @@ export function CalculationsContainer({
     <>
       <InputContainer>
         <h3>Emission category:</h3>
-        <Select placeholder="Select an emission category" className="antd-select" value={selectedEmissionCategory} onChange={handleSelectEmissionCategory}>
+        <Select
+          placeholder="Select an emission category"
+          className="antd-select"
+          value={selectedEmissionCategory}
+          onChange={handleSelectEmissionCategory}
+        >
           {emissions.map(({ id, title }) => (<Option key={`${id}-${title}`} value={id}>{title}</Option>))}
         </Select>
       </InputContainer>
@@ -34,7 +39,14 @@ export function CalculationsContainer({
             {title}
             :
           </h3>
-          <InputNumber className="antd-input" value={formValues[String(id)]} min={0} onChange={(value) => handleInputChange(value, id)} name={String(id)} />
+          <InputNumber
+            className="antd-input"
+            value={formValues[String(id)]}
+            min={0}
+            onChange={(value) => handleInputChange(value, id)}
+            name={String(id)}
+            placeholder={`Enter ${title} consumption`}
+          />
           <div className="span-container">
             <span>{unit}</span>
           </div>
