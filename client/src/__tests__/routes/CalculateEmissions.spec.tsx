@@ -1,8 +1,10 @@
 import {
-  render, screen, waitFor, fireEvent,
+  render, screen, waitFor, fireEvent, waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { CalculateEmissions } from '../../routes/CalculateEmissions';
 import emissionCategoriesMock from '../mocks/emissionCategories.json';
+import { rest, server } from '../../testServer';
+import { formatEmissions } from '../../services/formatters';
 
 describe('Testing the calculate emissions route', () => {
   test('It should correctly render the component', async () => {
@@ -38,7 +40,7 @@ describe('Testing the calculate emissions route', () => {
     it('Should initialize the total value of emissions at zero', async () => {
       render(<CalculateEmissions />);
 
-      const expectedInitialValue = (0).toFixed(2);
+      const expectedInitialValue = formatEmissions(0);
 
       await waitFor(() => screen.getByText(/Emission category:/i));
 
@@ -73,18 +75,150 @@ describe('Testing the calculate emissions route', () => {
       const emissionSourceOption = screen.getByText(mockEmissionCategory.title);
 
       // selecting emission source
-      fireEvent.mouseDown(emissionSourceOption);
+      fireEvent.click(emissionSourceOption);
+
+      await screen.findByText(`${mockEmissionCategory.emissionSources[0].title}:`);
 
       let emissionSourceFields = 0;
 
       // using findByText because if the text is not found, it will throw an error
       mockEmissionCategory.emissionSources.forEach(({ title, unit }) => {
-        screen.findByText(title);
-        screen.findByText(unit);
+        screen.getByText(`${title}:`);
+        screen.getByText(unit);
         emissionSourceFields += 1;
       });
 
       expect(emissionSourceFields).toEqual(mockEmissionCategory.emissionSources.length);
+    });
+  });
+  describe('When calculating a single emission', () => {
+    it('It should propagate the value returned by the API', async () => {
+      server.use(
+        rest.get('http://localhost:4000/calculate', (_req, res, ctx) => res(ctx.status(200), ctx.json({ emission: 12.23 }))),
+      );
+      render(<CalculateEmissions />);
+
+      await waitFor(() => screen.getByText(/Emission category:/i));
+      const select = screen.getByText(/Select an emission category/i);
+      const mockEmissionCategory = emissionCategoriesMock[0];
+
+      // opening select
+      fireEvent.mouseDown(select);
+
+      const emissionSourceOption = screen.getByText(mockEmissionCategory.title);
+
+      // selecting emission source
+      fireEvent.click(emissionSourceOption);
+
+      const { title } = mockEmissionCategory.emissionSources[0];
+
+      const placeholder = `Enter ${title} consumption`;
+
+      const input = screen.getByPlaceholderText(placeholder);
+      fireEvent.change(input, { target: { value: '12' } });
+
+      const calculationResult = await screen.findByText(`Total emissions: ${formatEmissions(12.23)}`);
+      expect(calculationResult).not.toBeNull();
+    });
+  });
+  describe('When calculating multiple emissions at once', () => {
+    it('Should sum the values returned by the api', async () => {
+      const mockEmissionsResponse = 12.23;
+
+      server.use(
+        rest.get('http://localhost:4000/calculate', (_req, res, ctx) => res(ctx.status(200), ctx.json({ emission: mockEmissionsResponse }))),
+      );
+
+      render(<CalculateEmissions />);
+
+      await waitFor(() => screen.getByText(/Emission category:/i));
+      const select = screen.getByText(/Select an emission category/i);
+      const mockEmissionCategory = emissionCategoriesMock[0];
+
+      // opening select
+      fireEvent.mouseDown(select);
+
+      const emissionSourceOption = screen.getByText(mockEmissionCategory.title);
+
+      // selecting emission source
+      fireEvent.click(emissionSourceOption);
+
+      const { title: firstEmissionTitle } = mockEmissionCategory.emissionSources[0];
+      const { title: secondEmissionTitle } = mockEmissionCategory.emissionSources[1];
+
+      const getEmissionPlaceholder = (emissionTitle: string) => `Enter ${emissionTitle} consumption`;
+
+      fireEvent.change(
+        screen.getByPlaceholderText(getEmissionPlaceholder(firstEmissionTitle)),
+        { target: { value: '12' } },
+      );
+
+      const firstCalculationRestul = await screen.findByText(`Total emissions: ${formatEmissions(mockEmissionsResponse)}`);
+      expect(firstCalculationRestul).not.toBeNull();
+
+      fireEvent.change(
+        screen.getByPlaceholderText(getEmissionPlaceholder(secondEmissionTitle)),
+        { target: { value: '12' } },
+      );
+
+      const calculationResult = await screen.findByText(`Total emissions: ${formatEmissions(mockEmissionsResponse * 2)}`);
+      expect(calculationResult).not.toBeNull();
+    });
+    it.skip('Should subtract total Emissions when values are inserted and then removed', async () => {
+      server.use(
+        rest.get('http://localhost:4000/calculate', (_req, res, ctx) => {
+          const value = _req.url.searchParams.get('value');
+          return res(ctx.status(200), ctx.json({ emission: Number(value) }));
+        }),
+      );
+
+      render(<CalculateEmissions />);
+
+      await waitFor(() => screen.getByText(/Emission category:/i));
+      const select = screen.getByText(/Select an emission category/i);
+      const mockEmissionCategory = emissionCategoriesMock[0];
+
+      // opening select
+      fireEvent.mouseDown(select);
+
+      const emissionSourceOption = screen.getByText(mockEmissionCategory.title);
+
+      // selecting emission source
+      fireEvent.click(emissionSourceOption);
+
+      const { title: firstEmissionTitle } = mockEmissionCategory.emissionSources[0];
+      const { title: secondEmissionTitle } = mockEmissionCategory.emissionSources[1];
+
+      const getEmissionPlaceholder = (emissionTitle: string) => `Enter ${emissionTitle} consumption`;
+
+      const firstInputValue = 12;
+      fireEvent.change(
+        screen.getByPlaceholderText(getEmissionPlaceholder(firstEmissionTitle)),
+        { target: { value: firstInputValue } },
+      );
+
+      const firstCalculationRestul = await screen.findByText(`Total emissions: ${formatEmissions(firstInputValue)}`);
+      expect(firstCalculationRestul).not.toBeNull();
+
+      const secondInputValue = 15;
+      fireEvent.change(
+        screen.getByPlaceholderText(getEmissionPlaceholder(secondEmissionTitle)),
+        { target: { value: secondInputValue } },
+      );
+
+      const totalEmissions = firstInputValue + secondInputValue;
+
+      const calculationResult = await screen.findByText(`Total emissions: ${formatEmissions(totalEmissions)}`);
+      expect(calculationResult).not.toBeNull();
+
+      // removing second input emission value
+      fireEvent.change(
+        screen.getByPlaceholderText(getEmissionPlaceholder(secondEmissionTitle)),
+        { target: { value: 0 } },
+      );
+
+      const finalTotalEmissions = await screen.findByText(`Total emissions: ${formatEmissions(totalEmissions - secondInputValue)}`);
+      expect(finalTotalEmissions).not.toBeNull();
     });
   });
 });

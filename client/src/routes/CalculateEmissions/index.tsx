@@ -25,7 +25,7 @@ export function CalculateEmissions() {
   const generateInitialFormValues = (emissionSources: IEmissionSource[]) => {
     const newFormValues: IAnyObject = {};
     emissionSources.forEach(({ id }) => {
-      newFormValues[String(id)] = 0;
+      newFormValues[String(id)] = '';
     });
 
     return newFormValues;
@@ -56,7 +56,7 @@ export function CalculateEmissions() {
   };
 
   const debouncedCalculateEmission = useCallback(
-    debounce((id, value) => handleCalculateEmission(id, value), 300),
+    debounce((id, value) => handleCalculateEmission(id, value), 50),
     [emissionResults],
   );
 

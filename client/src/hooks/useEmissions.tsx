@@ -4,7 +4,7 @@ import { IUseEmissions, IEmissionCategory, ICalculateEmissionResponse } from '..
 
 export function useEmissions(): IUseEmissions {
   const [emissions, setEmissions] = useState<IEmissionCategory[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const emissionsBaseUrl = process.env.REACT_APP_EMISSIONS_BASE_URL;
 
