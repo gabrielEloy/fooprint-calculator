@@ -1,25 +1,14 @@
-import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
-import { capitalizeFirstLetter } from '../../services/formatString';
-import { IHeaderItem } from '../../interfaces/IHeaderItem';
+import { Layout } from 'antd';
+import HeaderStyles, { HeaderTitle } from './HeaderStyles';
 
 const { Header: AntdHeader } = Layout;
 
-interface IHeader {
-    headerItems: IHeaderItem[];
-}
-
-export function Header({ headerItems }: IHeader) {
+export function Header() {
   return (
-    <AntdHeader>
-      <div className="logo" />
-      <Menu theme="dark" mode="horizontal">
-        {headerItems.map((route) => (
-          <Menu.Item key={route.key}>
-            <Link to={route.key}>{capitalizeFirstLetter(route.label)}</Link>
-          </Menu.Item>
-        ))}
-      </Menu>
-    </AntdHeader>
+    <HeaderStyles>
+      <AntdHeader className="antd-header">
+        <HeaderTitle>footprint calculator</HeaderTitle>
+      </AntdHeader>
+    </HeaderStyles>
   );
 }
