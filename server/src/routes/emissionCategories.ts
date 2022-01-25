@@ -1,4 +1,5 @@
 import { ICalculateEmissionQueryParams } from '@src/interfaces/ICalculateEmissionQueryParams';
+import { ICustomError } from '@src/interfaces/ICustomError';
 import { calculateEmissionsValidator } from '@src/middlewares/validators/emissions/calculateEmissions';
 import {
   calculateEmission, getAllCategories, getCorrectionFactor, getEmissionFactor,
@@ -19,12 +20,18 @@ router.get('/calculate', calculateEmissionsValidator, (req: Request<{}, {}, {}, 
     value,
   } = req.query as ICalculateEmissionQueryParams;
 
-  const emissionFactor = getEmissionFactor(emissionSourceId);
-  const correctionFactor = getCorrectionFactor(emissionSourceId);
+  try {
+    const emissionFactor = getEmissionFactor(emissionSourceId);
+    const correctionFactor = getCorrectionFactor(emissionSourceId);
 
-  const emission = calculateEmission({ emissionValue: value, emissionFactor, correctionFactor });
+    const emission = calculateEmission({ emissionValue: value, emissionFactor, correctionFactor });
 
-  res.json({ emission, unit: 'kg CO2e/yr' });
+    res.json({ emission, unit: 'kg CO2e/yr' });
+  } catch (err) {
+    const error = err as ICustomError;
+
+    return res.status(error.code || 400).json({ message: error.message });
+  }
 });
 
 export default router;
