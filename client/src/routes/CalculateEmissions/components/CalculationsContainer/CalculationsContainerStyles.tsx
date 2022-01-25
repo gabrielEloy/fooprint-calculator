@@ -32,9 +32,13 @@ export const InputContainer = styled.div`
     @media (max-width: 670px) {
         min-width: 80%;
         display: flex;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
         .antd-select{
-        width: 120px;
-        margin-left: 20px;
+        margin-left: 0px;
+        display: flex;
     
 
         .span-container{

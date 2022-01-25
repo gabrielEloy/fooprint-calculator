@@ -6,7 +6,8 @@ const CalculateEmissionStyles = styled.div`
     
 
 .calculate-emission-container{
-    margin-top: 50px;
+    margin: 50px;
+
     .card-content{
         display: flex;
         flex-direction: row;
@@ -24,6 +25,7 @@ const CalculateEmissionStyles = styled.div`
     }
     
     @media (max-width: 670px) {
+        margin: 50px 0px 0px 0px;
         .card-content{
             flex-direction: column;
         }

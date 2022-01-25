@@ -1,8 +1,12 @@
+import GlobalStyle from './globalStyles';
 import { CalculateEmissions } from './routes/CalculateEmissions';
 
 function App() {
   return (
-    <CalculateEmissions />
+    <>
+      <GlobalStyle />
+      <CalculateEmissions />
+    </>
   );
 }
 
