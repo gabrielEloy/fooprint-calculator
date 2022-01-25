@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const InputContainer = styled.div`
     display: flex;
-    margin: 15px 0;
+    margin: 10px 0;
+    
 
     .antd-select{
         width: 120px;
@@ -12,6 +13,7 @@ export const InputContainer = styled.div`
     h3{
         display: block;
         min-width: 120px;
+        justify-self: center;
     }
     .span-container{
         display: flex;
@@ -22,6 +24,24 @@ export const InputContainer = styled.div`
     }
 
     .antd-input{
-        width: 120px;
+        min-width: 120px;
+        width: max-content;
     }
+
+
+    @media (max-width: 670px) {
+        display: flex;
+        .antd-select{
+        width: 120px;
+        margin-left: 20px;
+    
+
+        .span-container{
+            display: flex;
+            align-items: center;
+            span{
+                margin-left: 20px;
+            }
+        }
+        }
 `;
