@@ -56,7 +56,7 @@ export function CalculateEmissions() {
   };
 
   const debouncedCalculateEmission = useCallback(
-    debounce((id, value) => handleCalculateEmission(id, value), 50),
+    debounce((id, value) => handleCalculateEmission(id, value), 200),
     [emissionResults],
   );
 
@@ -81,8 +81,8 @@ export function CalculateEmissions() {
             {isLoading ? (
               <LoaderContainer>
                 <div>
-                  <span>loading</span>
                   <Spin />
+                  <span>Loading</span>
                 </div>
               </LoaderContainer>
             ) : (
