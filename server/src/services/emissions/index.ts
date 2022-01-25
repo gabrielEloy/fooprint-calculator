@@ -1,4 +1,5 @@
 import { ICalculatedEmissionArgs } from '@src/interfaces/ICalculatedEmissionArgs';
+import { ICustomError } from '@src/interfaces/ICustomError';
 import { IEmissionCategory } from '@src/interfaces/IEmissionCategory';
 import { IEmissionSourcesEntity } from '@src/interfaces/IEmissionSource';
 import { getCategories } from './data/categories';
@@ -9,10 +10,11 @@ import { getAllEmissionSources } from './data/emissionSources';
 export const getEmissionFactor = (emissionSourceId: number): number => {
   const emissionFactors = getAllEmissionFactors();
   const emissionFactor = emissionFactors.find((factor) => factor.emissionSourceId === emissionSourceId);
-  console.log({ emissionFactors, emissionFactor, emissionSourceId });
 
   if (!emissionFactor) {
-    throw new Error(`Emission factor with id ${emissionSourceId} not found`);
+    const notFoundError = new Error(`Emission factor with id ${emissionSourceId} not found`) as ICustomError;
+    notFoundError.code = 404;
+    throw notFoundError;
   }
 
   return emissionFactor!.value;
