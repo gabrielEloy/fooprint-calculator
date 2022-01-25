@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Carbon Footprint Calculator",
-    "description": "A carbon footprint calculator helps people be more aware of their contribution to the current environmental problem and what they can do to lessen their impact on the environment.",
+    "description": "A carbon footprint calculator helps people be more aware of their contribution to the current environmental problem and what they can do to lessen their impact on the environment. This application exposes a RESTful API that allows users to calculate their carbon footprint based on their daily activities.",
     "license": {
       "name": "MIT"
     }
@@ -61,6 +61,11 @@
           },
           "400": {
             "description": "Validation error. One of the sent parameters was invalid or missing",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },"404": {
+            "description": "Not found error. The queried emission source Id was not found",
             "schema": {
               "$ref": "#/definitions/ErrorModel"
             }
@@ -132,7 +137,7 @@
       ],
       "properties": {
         "message": {
-          "type": "string"
+          "type": "string"  
         }
       }
     }

@@ -30,6 +30,7 @@ export const InputContainer = styled.div`
 
 
     @media (max-width: 670px) {
+        min-width: 80%;
         display: flex;
         .antd-select{
         width: 120px;
